@@ -1,0 +1,36 @@
+version: '2'
+services:
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    expose:
+      - "2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: project-kafka
+    ports:
+      - "9092:9092"
+    expose:
+      - "9902"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "SensorData:1:1"
+    volumes:
+      - ./:/etc/kafka
+      
+  influxdb:
+    image: influxdb:1.7.6
+    ports:
+      - 8086:8086
+    volumes:
+      - /var/lib/influxdb
+    environment:
+      INFLUXDB_HTTP_AUTH_ENABLED: "false"
+      INFLUXDB_USER: user
+      INFLUXDB_USER_PASSWORD: pass
+      INFLUXDB_DB: boot
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: secret

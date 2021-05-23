@@ -1,0 +1,5 @@
+
+comando para começar -> cd firefighterdata, npm start
+http://172.25.64.1:3000
+public directory -> index.html
+app.js, envia o html para p index.html
