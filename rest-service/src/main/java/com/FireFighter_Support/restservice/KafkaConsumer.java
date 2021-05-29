@@ -1,6 +1,7 @@
 package com.FireFighter_Support.restservice;
 
 
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import org.influxdb.InfluxDB;
@@ -10,7 +11,9 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +31,7 @@ public class KafkaConsumer {
 
     private List<String> messages = new LinkedList<>();
 
-    private static final String TOPIC = "SensorData";
+    private static final String TOPIC = "ESP33_SensorData";
 
     private int idx = 1;
 
@@ -48,19 +51,19 @@ public class KafkaConsumer {
         System.out.println("Consumed message : " + value);
 
         //connecting to DB
-        InfluxDB influxDB = InfluxDBFactory.connect("http://127.0.0.1:8086", "admin", "secret");
+        InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.160.18:8086", "admin", "secret");
         // test connection           
         Pong response = influxDB.ping();
         if (response.getVersion().equalsIgnoreCase("unknown")) {
             log.error("Error pinging server.");
             return;
         } 
-        influxDB.createDatabase("firefighters");
+        influxDB.createDatabase("esp33_firefighters");
         influxDB.createRetentionPolicy(
-        "defaultPolicy", "firefighters", "30d", 1, true);
+        "defaultPolicy", "esp33_firefighters", "30d", 1, true);
         influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
         //influxDB.setRetentionPolicy("policy");
-        influxDB.setDatabase("firefighters");
+        influxDB.setDatabase("esp33_firefighters");
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
         //parsing data to send 
@@ -70,7 +73,7 @@ public class KafkaConsumer {
         idx=1; //firefighter index
         
         BatchPoints batchPoints = BatchPoints
-                        .database("firefighters")
+                        .database("esp33_firefighters")
                         //.retentionPolicy("defaultPolicy")
                         .build();
         while(itr2.hasNext())
@@ -79,7 +82,7 @@ public class KafkaConsumer {
    
             Point p = Point.measurement("SensorData")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("ff_num", idx )
+                .tag("ff_num", String.valueOf(idx) )
                 .addField("CO", data.get("CO").toString())
                 .addField("temp", data.get("temp").toString())
                 .addField("hum", data.get("hum").toString())
@@ -91,6 +94,15 @@ public class KafkaConsumer {
                 .build();
                 batchPoints.point(p);
                 influxDB.write(batchPoints);
+            if(Integer.parseInt(data.get("CO").toString()) > 10) {
+                publishToQueue("CO2","FF #"+ idx+" : "+data.get("CO").toString());
+            }
+            if(Float.parseFloat(data.get("hr").toString()) > 100 || Float.parseFloat(data.get("hr").toString()) < 70 ) {
+                publishToQueue("HearRate","FF #"+ idx+" : "+data.get("hr").toString());
+            }
+            if(Integer.parseInt(data.get("bat").toString()) < 20 ) {
+                publishToQueue("Battery","FF #"+ idx+" : "+data.get("bat").toString());
+            }
             idx++;
         }
         idx=1;
@@ -104,5 +116,13 @@ public class KafkaConsumer {
         messages.add(value.toString());
         
         ack.acknowledge();
+    }
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+    
+    //@Override
+    public void publishToQueue(String key, String value) {
+        kafkaTemplate.send("ESP33_Alerts", key, value);
+
     }
 }
