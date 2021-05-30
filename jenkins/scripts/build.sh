@@ -3,6 +3,7 @@ set -e
 
 MODULES=(
 	rest-service
+	grafana
 )
 
 for i in ${!MODULES[@]}; do
