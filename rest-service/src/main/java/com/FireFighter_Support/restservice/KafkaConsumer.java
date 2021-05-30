@@ -61,7 +61,7 @@ public class KafkaConsumer {
         influxDB.createDatabase("esp33_firefighters");
         influxDB.createRetentionPolicy("defaultPolicy", "esp33_firefighters", "30d", 1, true);
         influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
-        influxDB.setRetentionPolicy("defaultPolicy");
+        //influxDB.setRetentionPolicy("defaultPolicy");
         influxDB.setDatabase("esp33_firefighters");
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
@@ -73,7 +73,7 @@ public class KafkaConsumer {
         
         BatchPoints batchPoints = BatchPoints
                         .database("esp33_firefighters")
-                        .retentionPolicy("defaultPolicy")
+                        //.retentionPolicy("defaultPolicy")
                         .build();
         while(itr2.hasNext())
         {
