@@ -59,10 +59,9 @@ public class KafkaConsumer {
             return;
         } 
         influxDB.createDatabase("esp33_firefighters");
-        influxDB.createRetentionPolicy(
-        "defaultPolicy", "esp33_firefighters", "30d", 1, true);
+        influxDB.createRetentionPolicy("defaultPolicy", "esp33_firefighters", "30d", 1, true);
         influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
-        //influxDB.setRetentionPolicy("policy");
+        influxDB.setRetentionPolicy("defaultPolicy");
         influxDB.setDatabase("esp33_firefighters");
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
@@ -74,7 +73,7 @@ public class KafkaConsumer {
         
         BatchPoints batchPoints = BatchPoints
                         .database("esp33_firefighters")
-                        //.retentionPolicy("defaultPolicy")
+                        .retentionPolicy("defaultPolicy")
                         .build();
         while(itr2.hasNext())
         {
@@ -97,7 +96,7 @@ public class KafkaConsumer {
             if(Integer.parseInt(data.get("CO").toString()) > 10) {
                 publishToQueue("CO2","FF #"+ idx+" : "+data.get("CO").toString());
             }
-            if(Float.parseFloat(data.get("hr").toString()) > 100 || Float.parseFloat(data.get("hr").toString()) < 70 ) {
+            if(Float.parseFloat(data.get("hr").toString()) > 100 || Float.parseFloat(data.get("hr").toString()) < 60 ) {
                 publishToQueue("HearRate","FF #"+ idx+" : "+data.get("hr").toString());
             }
             if(Integer.parseInt(data.get("bat").toString()) < 20 ) {
@@ -106,10 +105,7 @@ public class KafkaConsumer {
             idx++;
         }
         idx=1;
-        /*System.out.println("Consumed message : " + value
-                         " with key : " + key
-                        + " from partition : "+ partition);
-              */      
+        System.out.println("Consumed message : " + value + " with key : " + key + " from partition : "+ partition);      
 
         
         
