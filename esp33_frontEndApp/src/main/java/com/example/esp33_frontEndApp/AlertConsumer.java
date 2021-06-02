@@ -35,4 +35,8 @@ public class AlertConsumer {
 
     }
 
+    public String getTopic() {
+        return TOPIC;
+    }
+
 }

@@ -33,6 +33,8 @@ public class KafkaConsumer {
 
     private static final String TOPIC = "ESP33_SensorData";
 
+    private static final String DATABASE_NAME = "esp33_firefighters";
+
     private int idx = 1;
 
     Logger log = LoggerFactory.getLogger(InfluxDBFactory.class);
@@ -58,11 +60,11 @@ public class KafkaConsumer {
             log.error("Error pinging server.");
             return;
         } 
-        influxDB.createDatabase("esp33_firefighters");
-        influxDB.createRetentionPolicy("defaultPolicy", "esp33_firefighters", "30d", 1, true);
+        influxDB.createDatabase(DATABASE_NAME);
+        influxDB.createRetentionPolicy("defaultPolicy", DATABASE_NAME, "30d", 1, true);
         influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
         //influxDB.setRetentionPolicy("defaultPolicy");
-        influxDB.setDatabase("esp33_firefighters");
+        influxDB.setDatabase(DATABASE_NAME);
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
         //parsing data to send 
@@ -72,7 +74,7 @@ public class KafkaConsumer {
         idx=1; //firefighter index
         
         BatchPoints batchPoints = BatchPoints
-                        .database("esp33_firefighters")
+                        .database(DATABASE_NAME)
                         //.retentionPolicy("defaultPolicy")
                         .build();
         while(itr2.hasNext())
@@ -120,5 +122,13 @@ public class KafkaConsumer {
     public void publishToQueue(String key, String value) {
         kafkaTemplate.send("ESP33_Alerts", key, value);
 
+    }
+
+    public String getTopic() {
+        return TOPIC;
+    }
+
+    public String getDatabaseName() {
+        return DATABASE_NAME;
     }
 }
