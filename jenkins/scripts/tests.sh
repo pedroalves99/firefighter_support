@@ -22,4 +22,5 @@ for i in ${!MODULES[@]}; do
 			exit 1
 		fi
 	fi
+    cd ..
 done
