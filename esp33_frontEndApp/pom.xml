@@ -16,6 +16,18 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>e7315e271819-releases</name>
+			<url>http://192.168.160.49:8081/artifactory/maven_es2021</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>e7315e271819-snapshots</name>
+			<url>http://192.168.160.49:8081/artifactory/maven_es2021</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
