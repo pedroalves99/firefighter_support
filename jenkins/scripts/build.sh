@@ -3,7 +3,6 @@ set -e
 
 MODULES=(
 	rest-service
-	esp33_frontEndApp
 )
 
 for i in ${!MODULES[@]}; do
