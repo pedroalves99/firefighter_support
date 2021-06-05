@@ -27,8 +27,7 @@ public class Controllers {
         updateInfo();
 
         model.addAttribute("InfoSensors", data);
-        return "<html>\n" + "<header><title>Welcome</title></header>\n" +
-        "<body>\n" + data + "</body>\n" + "</html>";
+        return "testingKafka";
 
     }
 

@@ -30,9 +30,9 @@ import org.json.JSONArray;
 public class KafkaConsumer {
 
     private List<String> messages = new LinkedList<>();
-
+    
     private static final String TOPIC = "ESP33_SensorData";
-
+    
     private static final String DATABASE_NAME = "esp33_firefighters";
 
     private int idx = 1;
@@ -43,14 +43,14 @@ public class KafkaConsumer {
         return messages;
     }
 
-    @KafkaListener(topics = TOPIC)
+    @KafkaListener(topics = TOPIC, groupId = "FireFighter_2")
     public void messageListener(ConsumerRecord<String, String> consumerRecord, Acknowledgment ack) {
 
         String key = consumerRecord.key();
         String value = consumerRecord.value();
         int partition = consumerRecord.partition();
 
-        System.out.println("Consumed message : " + value);
+        //System.out.println("Consumed message : " + value);
 
         //connecting to DB
         InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.160.18:8086", "admin", "secret");
@@ -60,11 +60,11 @@ public class KafkaConsumer {
             log.error("Error pinging server.");
             return;
         } 
-        influxDB.createDatabase(DATABASE_NAME);
-        influxDB.createRetentionPolicy("defaultPolicy", DATABASE_NAME, "30d", 1, true);
+        influxDB.createDatabase("esp33_firefighters");
+        influxDB.createRetentionPolicy("defaultPolicy", "esp33_firefighters", "30d", 1, true);
         influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
         //influxDB.setRetentionPolicy("defaultPolicy");
-        influxDB.setDatabase(DATABASE_NAME);
+        influxDB.setDatabase("esp33_firefighters");
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
         //parsing data to send 
@@ -74,7 +74,7 @@ public class KafkaConsumer {
         idx=1; //firefighter index
         
         BatchPoints batchPoints = BatchPoints
-                        .database(DATABASE_NAME)
+                        .database("esp33_firefighters")
                         //.retentionPolicy("defaultPolicy")
                         .build();
         while(itr2.hasNext())
@@ -95,21 +95,14 @@ public class KafkaConsumer {
                 .build();
                 batchPoints.point(p);
                 influxDB.write(batchPoints);
-            if(Integer.parseInt(data.get("CO").toString()) > 10) {
-                publishToQueue("CO2","FF #"+ idx+" : "+data.get("CO").toString());
-            }
-            if(Float.parseFloat(data.get("hr").toString()) > 100 || Float.parseFloat(data.get("hr").toString()) < 60 ) {
-                publishToQueue("HearRate","FF #"+ idx+" : "+data.get("hr").toString());
-            }
-            if(Integer.parseInt(data.get("bat").toString()) < 20 ) {
-                publishToQueue("Battery","FF #"+ idx+" : "+data.get("bat").toString());
+            if(Float.parseFloat(data.get("hr").toString()) > 100) {
+            	 System.out.println("Produced Message : " + "FF #"+ idx+" : "+data.get("hr").toString());
+                publishToQueue("HeartRate","FF #"+ idx+" : "+data.get("hr").toString());
             }
             idx++;
         }
         idx=1;
-        System.out.println("Consumed message : " + value + " with key : " + key + " from partition : "+ partition);      
-
-        
+        //System.out.println("Consumed message : " + value + " with key : " + key + " from partition : "+ partition);      
         
         messages.add(value.toString());
         
@@ -123,7 +116,7 @@ public class KafkaConsumer {
         kafkaTemplate.send("ESP33_Alerts", key, value);
 
     }
-
+    
     public String getTopic() {
         return TOPIC;
     }
