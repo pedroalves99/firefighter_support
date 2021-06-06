@@ -100,8 +100,12 @@ public class AlertConsumer {
     	return positions.size();
     }
     
-    public String getTopic() {
+    public String getTopicA() {
         return TOPIC_A;
+    }
+
+    public String getTopicR() {
+        return TOPIC_R;
     }
 
 }
