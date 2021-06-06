@@ -14,7 +14,7 @@
 	<name>esp33_frontEndApp</name>
 	<description>app for front end</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 	<distributionManagement>
 		<repository>
