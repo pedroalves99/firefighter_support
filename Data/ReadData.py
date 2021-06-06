@@ -6,11 +6,11 @@ import json
 from pykafka import KafkaClient
 
 
-client = KafkaClient(hosts='127.0.0.1:9092')
-print(client)
-topic = client.topics['SensorData']
 
-producer = topic.get_sync_producer()
+client_SD = KafkaClient(hosts='192.168.160.18:19092')
+topic_SD = client_SD.topics['ESP33_SensorData']
+producer_SD = topic_SD.get_sync_producer()
+
 
 data = {"firefighters":[ dict() ,  dict() ,  dict() ]}
 c = 0
@@ -57,7 +57,7 @@ while c < 160:
             data["firefighters"][2].update({"hr": row[1]})
         hr_idx += 1
     print(data)
-    producer.produce(json.dumps(data).encode())
+    producer_SD.produce(json.dumps(data).encode())
     sleep(5)
     c += 1
-producer.stop()
+producer_SD.stop()
