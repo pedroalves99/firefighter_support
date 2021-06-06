@@ -1,5 +1,6 @@
 var stompClient = null;
 var stompClient2 = null;
+var stompClient3 = null;
 
 connect();
 setInterval(sendName, 5000);
@@ -38,6 +39,17 @@ function connect() {
             showPos(updatePos);
         });
     });
+    
+    var socket3 = new SockJS('/reset');
+    stompClient3 = Stomp.over(socket3);
+    stompClient3.connect({}, function (frame) {
+
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient3.subscribe('/topic/reset', function (updateReset) {
+            showReset(updateReset);
+        });
+    });
   
 }
 
@@ -57,6 +69,14 @@ function sendName() {
 function sendRequest() {
     console.log("REQUESTING INFO");
     stompClient2.send("/app/pos_msg", {});
+}
+
+function showReset(message) {
+    console.log(" IN greeting!!!");
+    console.log(message);
+    
+    alert(message.body);
+    
 }
 
 function showGreeting(message) {
@@ -106,4 +126,12 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
+    $( "#reset" ).click(function(){ 
+	    var mapProp= {
+		center:new google.maps.LatLng(40.06479009,-8.16042933),
+		zoom: 21,
+	    };
+	    var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	    stompClient3.send("/app/reset", {});
+    });
 });

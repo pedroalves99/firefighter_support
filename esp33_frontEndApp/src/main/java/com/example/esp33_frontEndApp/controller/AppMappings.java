@@ -68,5 +68,14 @@ public class AppMappings {
         return consumer.get_positions();
         
     }
+    
+    @MessageMapping("/reset")
+    @SendTo("/topic/reset")
+    public String updateReset() throws Exception{
+    	System.out.println("RESETING");
+    	consumer.clearPositions();
+        return "ok";
+        
+    }
 
 }

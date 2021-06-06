@@ -20,6 +20,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/alert").withSockJS();
     registry.addEndpoint("/positions").withSockJS();
+    registry.addEndpoint("/reset").withSockJS();
+    
   }
 
 }

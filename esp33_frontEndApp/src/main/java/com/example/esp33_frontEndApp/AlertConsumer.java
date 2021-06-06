@@ -87,6 +87,10 @@ public class AlertConsumer {
     	positions.remove(1);
     	positions.remove(2);
     }
+    
+    public void clearPositions(){
+    	positions.clear();
+    }
 
     public int size(){
     	return alert_messages.size();
