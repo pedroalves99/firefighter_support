@@ -22,7 +22,7 @@ public class AlertConsumer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    private List<String> alert_messages = new LinkedList<>();
+    private LinkedList<String> alert_messages = new LinkedList<>();
     
     private List<String[]> positions = new LinkedList<>();
     
@@ -66,7 +66,7 @@ public class AlertConsumer {
         String value = consumerRecord.value();
         int partition = consumerRecord.partition();
 
-        System.out.println("Consumed message : value " + value+" key: " + key);
+        System.out.println("Consumed message : value " + value +" key: " + key);
         
         alert_messages.add(value);
         System.out.println(alert_messages);
@@ -74,7 +74,7 @@ public class AlertConsumer {
 
     }
     
-    public List<String> getAlert_messages() {
+    public LinkedList<String> getAlert_messages() {
         return alert_messages;
     }
     

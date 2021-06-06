@@ -62,8 +62,10 @@ function sendRequest() {
 function showGreeting(message) {
     console.log(" IN greeting!!!");
     console.log(message);
+    message = JSON.parse(message.body);
     
     for(var i = 0; i< message.length; i++){
+    	   console.log("ALERTING");
 	   alert(message[i]);
     } 
 }

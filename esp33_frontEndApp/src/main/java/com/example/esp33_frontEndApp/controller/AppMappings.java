@@ -23,11 +23,12 @@ public class AppMappings {
     
     /* Constants */
     private static final Logger log = LoggerFactory.getLogger(AppMappings.class);
+    private LinkedList<String> alerts = new LinkedList<String>();
     
     /* Instance Variables */
     @Autowired private RestTemplate restTemplate;
     @Autowired private AlertConsumer consumer;
-    private List<String> alerts = new LinkedList<String>();
+    
     /* Views */
 
     @GetMapping("/historic")
@@ -49,12 +50,12 @@ public class AppMappings {
     
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public List<String> updateAlerts() throws Exception{
+    public LinkedList<String> updateAlerts() throws Exception{
     	System.out.println("UPDATING MESSAGES");
-    	this.alerts = consumer.getAlert_messages();
-    	consumer.removeAlert();
+    	alerts = (LinkedList<String>)consumer.getAlert_messages().clone();
     	System.out.println(alerts);
-        return this.alerts;
+    	consumer.removeAlert();
+        return alerts;
         
     }
     
@@ -63,7 +64,7 @@ public class AppMappings {
     @MessageMapping("/pos_msg")
     @SendTo("/topic/pos")
     public List<String[]> updatePos() throws Exception{
-    
+    	System.out.println("UPDATING POSITIONS");
         return consumer.get_positions();
         
     }

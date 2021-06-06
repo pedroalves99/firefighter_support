@@ -96,7 +96,7 @@ public class KafkaConsumer {
                 batchPoints.point(p);
                 influxDB.write(batchPoints);
             if(Float.parseFloat(data.get("hr").toString()) > 100) {
-            	 System.out.println("Produced Message : " + "FF #"+ idx+" : "+data.get("hr").toString());
+            	 System.out.println("Produced Message : " + "FF #"+ idx+" : Heart Rate is "+data.get("hr").toString() + "!");
                 publishToQueue("HeartRate","FF #"+ idx+" : "+data.get("hr").toString());
             }
             idx++;
