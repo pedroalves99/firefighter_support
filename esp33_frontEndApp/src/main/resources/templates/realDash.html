@@ -37,17 +37,20 @@
         	zoom: 21,
     	    };
     	    var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-
+	    
+	    
             /*<![CDATA[*/
 
             /*[# th:each="ff : ${ffPositions}"]*/
                 
-                new google.maps.Marker({position: new google.maps.LatLng(/*[[${ff[0]}]]*/, /*[[${ff[1]}]]*/), 
+            var marker = new google.maps.Marker({position: new google.maps.LatLng(/*[[${ff[0]}]]*/, /*[[${ff[1]}]]*/), 
                    icon: {
                         url: 'https://img.icons8.com/dotty/2x/fireman-male.png',
                         scaledSize: new google.maps.Size(25, 25)
                     }
-                }).setMap(map);
+                });
+                
+            marker.setMap(map);
                 
             /*[/]*/
 
@@ -67,19 +70,6 @@
     
     <button id="reset" class="btn btn-success"> Reset Mission </button>
     <br>
-    
-    <script th:inline="javascript">
-    
-    	/*<![CDATA[*/
-    	
-    	/*[# th:each="alert : ${alerts}"]*/
-    	
-    		alert(/*[[${alert}]]*/);
-    	
-    	/*[/]*/
-
-        /*]]>*/
-    </script>
 
     <br>
 

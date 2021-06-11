@@ -98,24 +98,38 @@ function showPos(message) {
         zoom: 21,
     };
     var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-   
+    var markers = [];
     for(var i = 0; i< message.length; i++){
         if (i+3 < message.length ){
-		new google.maps.Marker({position: new google.maps.LatLng(message[i][0], message[i][1]), 
+		var marker = new google.maps.Marker({position: new google.maps.LatLng(message[i][0], message[i][1]), 
 		    icon: {
 		        url: 'https://img.icons8.com/dotty/2x/fireman-male.png',
 		        scaledSize: new google.maps.Size(20, 20)
-		    }
-		}).setMap(map);
+		    },
+		    title: message[i][2]
+		});
         }
         else{
-        	new google.maps.Marker({position: new google.maps.LatLng(message[i][0], message[i][1]), 
+        	var marker = new google.maps.Marker({position: new google.maps.LatLng(message[i][0], message[i][1]), 
 		    icon: {
 		        url: 'https://img.icons8.com/dotty/2x/fireman-male.png',
 		        scaledSize: new google.maps.Size(35, 35)
-		    }
-		}).setMap(map);
+		    },
+		    title: message[i][2]
+		});
         }
+        
+        marker.setMap(map);
+            
+	var infoWindow = new google.maps.InfoWindow();
+	    
+	marker.addListener("click", () => {
+	      infoWindow.close();
+	      infoWindow.setContent(marker.getTitle());
+	      infoWindow.open(marker.getMap(), marker);
+	});
+	    
+	markers.push(marker);
     }
 }
 

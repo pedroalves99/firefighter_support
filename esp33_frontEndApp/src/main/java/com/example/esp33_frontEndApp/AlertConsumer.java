@@ -47,9 +47,10 @@ public class AlertConsumer {
         while(itr2.hasNext())
         {
             JSONObject data = (JSONObject) itr2.next();
-            String[] args = new String[2];
+            String[] args = new String[3];
             args[0] = data.get("lat").toString();
             args[1] = data.get("longi").toString();
+            args[2] = "FF #" + idx + ": Hear Rate -> " +data.get("hr").toString();
             positions.add(args);
    
             idx++;
