@@ -73,7 +73,7 @@
             </thead>
             <tbody>
                 <tr th:if="${meas.empty}">
-                    <td colspan="2"> No Mission Available </td>
+                    <td colspan="8"> No Mission Available </td>
                 </tr>
                 <tr th:each="mea : ${meas}">
                     <td><span th:text="${mea.getTime()}"></span></td>

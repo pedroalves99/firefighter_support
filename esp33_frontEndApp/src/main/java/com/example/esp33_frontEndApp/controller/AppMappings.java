@@ -104,7 +104,7 @@ public class AppMappings {
         influxDB.setDatabase("esp33_firefighters");
         influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
         
-        QueryResult queryResult = influxDB.query(new Query("SELECT * FROM SensorData WHERE time >= now() - 1h", "esp33_firefighters"));
+        QueryResult queryResult = influxDB.query(new Query("SELECT * FROM SensorData WHERE time >= now() - 2h", "esp33_firefighters"));
 
 	System.out.println(queryResult);
 	InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
