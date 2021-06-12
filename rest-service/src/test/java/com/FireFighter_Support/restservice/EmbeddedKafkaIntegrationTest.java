@@ -32,9 +32,9 @@ class EmbeddedKafkaIntegrationTest {
     @Autowired
     private KafkaProducerTest producer;
 
-    @Value("${ESP33_SensorData}")
+    @Value("ESP33_SensorData")
     private String topic;
-    @Value("${ESP33_Alerts}")
+    @Value("ESP33_Alerts")
     private String topic2;
 
 

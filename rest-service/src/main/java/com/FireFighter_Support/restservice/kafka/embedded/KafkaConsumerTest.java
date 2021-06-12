@@ -18,7 +18,7 @@ public class KafkaConsumerTest {
     private CountDownLatch latch = new CountDownLatch(1);
     private String payload = null;
 
-    @KafkaListener(topics = "${ESP33_Alerts}")
+    @KafkaListener(topics = "ESP33_Alerts")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         LOGGER.info("received payload='{}'", consumerRecord.toString());
         setPayload(consumerRecord.toString());
