@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.ActiveProfiles;
-/*
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class RestServiceApplicationTests {
@@ -52,4 +52,3 @@ class RestServiceApplicationTests {
     }
 
 }
-*/
