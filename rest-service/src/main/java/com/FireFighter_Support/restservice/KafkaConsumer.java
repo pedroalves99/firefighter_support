@@ -22,9 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 import org.json.JSONObject;
 import org.json.JSONArray;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class KafkaConsumer {
@@ -114,7 +116,7 @@ public class KafkaConsumer {
     //@Override
     public void publishToQueue(String key, String value) {
         kafkaTemplate.send("ESP33_Alerts", key, value);
-
+        LOG.log(Level.WARN, value);
     }
     
     public String getTopic() {
