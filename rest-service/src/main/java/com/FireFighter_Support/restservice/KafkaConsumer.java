@@ -9,8 +9,6 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -39,7 +37,8 @@ public class KafkaConsumer {
 
     private int idx = 1;
 
-    Logger log = LoggerFactory.getLogger(InfluxDBFactory.class);
+    // Logger log = LoggerFactory.getLogger(InfluxDBFactory.class);
+    private static final Logger log = Logger.getLogger(KafkaConsumer.class.getName());
     
     public List<String> get_messages() {
         return messages;
@@ -52,7 +51,7 @@ public class KafkaConsumer {
         String value = consumerRecord.value();
         int partition = consumerRecord.partition();
 
-        log.log(Level.WARN, value);
+        log.log(Level.INFO, value);
 
         //System.out.println("Consumed message : " + value);
 
@@ -61,7 +60,8 @@ public class KafkaConsumer {
         // test connection           
         Pong response = influxDB.ping();
         if (response.getVersion().equalsIgnoreCase("unknown")) {
-            log.error("Error pinging server.");
+            // log.error("Error pinging server.");
+            log.log(Level.WARNING, "Error pinging server.");
             return;
         } 
         influxDB.createDatabase("esp33_firefighters");
@@ -118,7 +118,7 @@ public class KafkaConsumer {
     //@Override
     public void publishToQueue(String key, String value) {
         kafkaTemplate.send("ESP33_Alerts", key, value);
-        log.log(Level.WARN, value);
+        log.log(Level.WARNING, value);
     }
     
     public String getTopic() {
