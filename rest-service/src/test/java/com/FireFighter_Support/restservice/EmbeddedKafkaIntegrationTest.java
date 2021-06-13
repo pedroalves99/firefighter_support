@@ -19,8 +19,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest
-@DirtiesContext 
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://192.168.160.18:19092", "port=19092" })
+@DirtiesContext                                                             //192.168.160.18:19092
+@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:19092", "port=19092" })
 class EmbeddedKafkaIntegrationTest {
 
     @Autowired
@@ -53,7 +53,7 @@ class EmbeddedKafkaIntegrationTest {
         consumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
         
         assertThat(consumer.getLatch().getCount(), equalTo(0L));
-        assertThat(consumer.getPayload(), containsString("FF #1 : 101.525187124"));
+        assertThat(consumer.getPayload(), containsString("FF #1 : Heart Rate is 101.525187124"));
     }
 
 }
